@@ -1,9 +1,14 @@
 package asfgo
 
 func (a *ASF) AddLicense() (resp *response, err error) {
+	if len(a.appIDs) == 0 && len(a.subIDs) == 0 {
+		err = ErrNoAppAndSub
+		return
+	}
+
 	data := struct {
-		Apps     []uint32 `json:"Apps"`
-		Packages []uint32 `json:"Packages"`
+		Apps     []string `json:"Apps"`
+		Packages []string `json:"Packages"`
 	}{
 		Apps:     a.appIDs,
 		Packages: a.subIDs,

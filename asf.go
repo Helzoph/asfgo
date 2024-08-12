@@ -1,11 +1,16 @@
 package asfgo
 
+import (
+	"reflect"
+	"strconv"
+)
+
 type ASF struct {
 	addr    string
 	auth    string
 	botName string
-	appIDs  []uint32
-	subIDs  []uint32
+	appIDs  []string
+	subIDs  []string
 }
 
 func NewASF(addr, auth string) *ASF {
@@ -20,12 +25,82 @@ func (a *ASF) Bot(botName string) *ASF {
 	return a
 }
 
-func (a *ASF) AppIDs(appIDs []uint32) *ASF {
+func (a *ASF) AppIDs(appIDs any) *ASF {
+	tp := reflect.TypeOf(appIDs)
+	if tp.Kind() == reflect.Slice {
+		switch tp.Elem().Kind() {
+		case reflect.String:
+			a.AppIDsStr(appIDs.([]string))
+		case reflect.Int:
+			a.AppIDsInt(appIDs.([]int))
+		default:
+			panic(ErrInvalidType)
+		}
+		return a
+	}
+
+	switch tp.Kind() {
+	case reflect.String:
+		a.AppIDsStr([]string{appIDs.(string)})
+	case reflect.Int:
+		a.AppIDsInt([]int{appIDs.(int)})
+	default:
+		panic(ErrInvalidType)
+	}
+
+	return a
+}
+
+func (a *ASF) AppIDsStr(appIDs []string) *ASF {
 	a.appIDs = appIDs
 	return a
 }
 
-func (a *ASF) SubIDs(subIDs []uint32) *ASF {
+func (a *ASF) AppIDsInt(appIDsInt []int) *ASF {
+	appIDs := make([]string, len(appIDsInt))
+	for i, v := range appIDsInt {
+		appIDs[i] = strconv.Itoa(v)
+	}
+	a.appIDs = appIDs
+	return a
+}
+
+func (a *ASF) SubIDs(subIDs any) *ASF {
+	tp := reflect.TypeOf(subIDs)
+	if tp.Kind() == reflect.Slice {
+		switch tp.Elem().Kind() {
+		case reflect.String:
+			a.SubIDsStr(subIDs.([]string))
+		case reflect.Int:
+			a.SubIDsInt(subIDs.([]int))
+		default:
+			panic(ErrInvalidType)
+		}
+		return a
+	}
+
+	switch tp.Kind() {
+	case reflect.String:
+		a.SubIDsStr([]string{subIDs.(string)})
+	case reflect.Int:
+		a.SubIDsInt([]int{subIDs.(int)})
+	default:
+		panic(ErrInvalidType)
+	}
+
+	return a
+}
+
+func (a *ASF) SubIDsStr(subIDs []string) *ASF {
+	a.subIDs = subIDs
+	return a
+}
+
+func (a *ASF) SubIDsInt(subIDsInt []int) *ASF {
+	subIDs := make([]string, len(subIDsInt))
+	for i, v := range subIDsInt {
+		subIDs[i] = strconv.Itoa(v)
+	}
 	a.subIDs = subIDs
 	return a
 }
