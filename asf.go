@@ -1,6 +1,7 @@
 package asfgo
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 )
@@ -18,6 +19,19 @@ func NewASF(addr, auth string) *ASF {
 		addr: addr,
 		auth: auth,
 	}
+}
+
+func (a *ASF) CheckConnect() (err error) {
+	resp, err := a.get(a.addr + "/Api/ASF")
+	if err != nil {
+		return err
+	}
+
+	if !resp.Success {
+		return fmt.Errorf("failed to connect: %s", resp.Message)
+	}
+
+	return
 }
 
 func (a *ASF) Bot(botName string) *ASF {

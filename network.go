@@ -51,3 +51,27 @@ func (a *ASF) post(url string, data interface{}) (result *response, err error) {
 
 	return
 }
+
+func (a *ASF) get(url string) (result *response, err error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("Authorization", a.auth)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		return
+	}
+
+	return
+}
