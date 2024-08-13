@@ -2,12 +2,13 @@ package asfgo
 
 import (
 	"fmt"
+	"net/url"
 	"reflect"
 	"strconv"
 )
 
 type ASF struct {
-	addr    string
+	host    string
 	auth    string
 	botName string
 	appIDs  []string
@@ -16,13 +17,19 @@ type ASF struct {
 
 func NewASF(addr, auth string) *ASF {
 	return &ASF{
-		addr: addr,
+		host: addr,
 		auth: auth,
 	}
 }
 
 func (a *ASF) CheckConnect() (err error) {
-	resp, err := a.get(a.addr + "/Api/ASF")
+	url := url.URL{
+		Scheme: "http",
+		Host:   a.host,
+		Path:   "/Api/ASF",
+	}
+
+	resp, err := a.get(url.String())
 	if err != nil {
 		return err
 	}
