@@ -1,6 +1,6 @@
 package asfgo
 
-func (a *ASF) AddLicense() (resp *response, err error) {
+func (a *ASF) AddLicense() (resp *Response, err error) {
 	if len(a.appIDs) == 0 && len(a.subIDs) == 0 {
 		err = ErrNoAppAndSub
 		return
@@ -26,7 +26,7 @@ func (a *ASF) AddLicense() (resp *response, err error) {
 	return
 }
 
-func (a *ASF) Command(cmd string) (resp *response, err error) {
+func (a *ASF) Command(cmd string) (resp *Response, err error) {
 	data := struct {
 		Command string `json:"Command"`
 	}{

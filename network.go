@@ -8,20 +8,20 @@ import (
 	"reflect"
 )
 
-type response struct {
+type Response struct {
 	Message string      `json:"Message"`
 	Success bool        `json:"Success"`
 	Result  interface{} `json:"Result"`
 }
 
-func (a *ASF) post(url string, data interface{}) (result *response, err error) {
+func (a *ASF) post(url string, data interface{}) (result *Response, err error) {
 	tp := reflect.TypeOf(data)
 	if tp.Kind() == reflect.Ptr {
 		tp = tp.Elem()
 	}
 
 	if tp.Kind() != reflect.Struct {
-		return &response{}, fmt.Errorf("data must be a struct")
+		return &Response{}, fmt.Errorf("data must be a struct")
 	}
 
 	jsonData, err := json.Marshal(data)
@@ -52,7 +52,7 @@ func (a *ASF) post(url string, data interface{}) (result *response, err error) {
 	return
 }
 
-func (a *ASF) get(url string) (result *response, err error) {
+func (a *ASF) get(url string) (result *Response, err error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
